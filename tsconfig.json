@@ -1,0 +1,3 @@
+{
+  "extends": "@jaicome-internship/config/tsconfig.base.json"
+}

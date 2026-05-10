@@ -1,0 +1,24 @@
+{
+  "name": "@jaicome-internship/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@jaicome-internship/db": "workspace:*",
+    "@jaicome-internship/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@jaicome-internship/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
