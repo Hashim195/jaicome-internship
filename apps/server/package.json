@@ -10,6 +10,7 @@
     "start": "bun run dist/index.mjs"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.76",
     "@jaicome-internship/api": "workspace:*",
     "@jaicome-internship/auth": "workspace:*",
     "@jaicome-internship/db": "workspace:*",
@@ -17,10 +18,12 @@
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
+    "ai": "^6.0.177",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "hono": "catalog:",
-    "zod": "catalog:"
+    "nanoid": "^5.1.11",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@jaicome-internship/config": "workspace:*",
