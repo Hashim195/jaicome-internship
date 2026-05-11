@@ -8,9 +8,12 @@
     "dev": "vite dev"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.76",
     "@jaicome-internship/api": "workspace:*",
     "@jaicome-internship/env": "workspace:*",
     "@jaicome-internship/ui": "workspace:*",
+    "@mozilla/readability": "^0.6.0",
+    "@mswjs/interceptors": "^0.41.8",
     "@orpc/client": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/tanstack-query": "^1.13.14",
@@ -20,15 +23,19 @@
     "@tanstack/react-router": "^1.168.22",
     "@tanstack/react-router-ssr-query": "^1.166.11",
     "@tanstack/react-start": "^1.167.41",
+    "ai": "^6.0.177",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
+    "loglevel": "^1.9.2",
+    "loglevel-plugin-remote": "^0.6.8",
     "lucide-react": "^1.8.0",
+    "nanoid": "^5.1.11",
     "next-themes": "catalog:",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "sonner": "^2.0.7",
     "tailwindcss": "^4.2.2",
-    "zod": "catalog:"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@jaicome-internship/config": "workspace:*",
