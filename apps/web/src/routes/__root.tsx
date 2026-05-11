@@ -3,12 +3,13 @@ import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-
 import type { orpc } from "@/utils/orpc";
-
 import Header from "../components/header";
-
 import appCss from "../index.css?url";
+import { initLogger } from "@/lib/logger";
+if (typeof window !== "undefined") {
+  initLogger();
+}
 export interface RouterAppContext {
   orpc: typeof orpc;
   queryClient: QueryClient;
@@ -40,6 +41,10 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootDocument() {
+  if (typeof window !== "undefined") {
+    
+  }
+
   return (
     <html lang="en" className="dark">
       <head>
