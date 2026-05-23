@@ -1,4 +1,5 @@
 import { db, tickets, conversations } from "@jaicome-internship/db";
+import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 import { protectedProcedure } from "../index";

@@ -10,6 +10,7 @@ import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { agentRoutes } from "./agent";
 
 const app = new Hono();
 
@@ -23,6 +24,7 @@ app.use(
     credentials: true,
   }),
 );
+app.route("/api/agent", agentRoutes);
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 

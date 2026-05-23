@@ -1,5 +1,3 @@
-import log from "loglevel";
-import { ClientInterceptor } from "@mswjs/interceptors/ClientRequest";
 import { FetchInterceptor } from "@mswjs/interceptors/fetch";
 
 export type LogEntry = {

@@ -7,6 +7,8 @@ import type { orpc } from "@/utils/orpc";
 import Header from "../components/header";
 import appCss from "../index.css?url";
 import { initLogger } from "@/lib/logger";
+import { SupportWidget } from "../components/support-widget";
+
 if (typeof window !== "undefined") {
   initLogger();
 }
@@ -58,6 +60,7 @@ function RootDocument() {
         <Toaster richColors />
         <TanStackRouterDevtools position="bottom-left" />
         <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
+        <SupportWidget />
         <Scripts />
       </body>
     </html>
