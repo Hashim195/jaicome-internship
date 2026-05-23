@@ -75,13 +75,14 @@ agentRoutes.post("/chat", async (c) => {
     const systemPrompt = buildSystemPrompt(pageContext, logs);
 
     const result = await generateText({
-        model: getGroq()("llama-3.1-8b-instant"),
-        system: systemPrompt,
-      messages: messages.map((m: { role: string; content: string }) => ({
-        role: m.role as "user" | "assistant",
-        content: m.content,
-      })),
-    });
+    model: getGroq()("llama-3.1-8b-instant"),
+    system: systemPrompt,
+    messages: messages.map((m: { role: string; content: string }) => ({
+    role: m.role as "user" | "assistant",
+    content: m.content,
+  })),
+  maxTokens: 500,
+});
 
 const responseText = result.text;
 
