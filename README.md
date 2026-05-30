@@ -94,10 +94,10 @@ All errors are user-triggered, not thrown automatically on page load.
 ## Screenshots
 
 ### Chat Flow
-![Chat](screenshots/chat.png)
+![Chat](screenshots/Chat.png)
 
 ### Ticket Review
-![Review](screenshots/review.png)
+![Review](screenshots/Review.png)
 
 ## Project Structure
 
