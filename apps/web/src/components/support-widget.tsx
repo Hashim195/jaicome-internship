@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Readability } from "@mozilla/readability";
 import { getLogs } from "@/lib/logger";
 
 
@@ -57,17 +58,16 @@ export function SupportWidget() {
     setMessages(updatedMessages);
     setInput("");
     setIsLoading(true);
-    const documentClone = document.cloneNode(true) as Document;
-    const reader = new Readability(documentClone);
-    const article = reader.parse();
 
     try {
       const logs = getLogs();
+      const documentClone = document.cloneNode(true) as Document;
+      const article = new Readability(documentClone).parse();
       const pageContext = {
-      path: window.location.pathname,
-     title: document.title,
-      textContent: "",
-};
+        path: window.location.pathname,
+        title: document.title,
+        textContent: article?.textContent?.slice(0, 2000) ?? "",
+      };
       // Strip the UI greeting — LLMs require the conversation to start with a user message
       const firstUserIdx = updatedMessages.findIndex((m) => m.role === "user");
       const apiMessages = firstUserIdx >= 0 ? updatedMessages.slice(firstUserIdx) : updatedMessages;

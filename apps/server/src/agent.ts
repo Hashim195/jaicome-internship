@@ -23,7 +23,7 @@ function getGroq() {
 }
 
 function buildSystemPrompt(
-  pageContext: { path: string; title: string },
+  pageContext: { path: string; title: string; textContent?: string },
   logs: Array<{ type: string; level: string; message: string; timestamp: string; url?: string; status?: number }>
 ): string {
   const logsText =
@@ -36,8 +36,12 @@ function buildSystemPrompt(
           .join("\n")
       : "No logs captured.";
 
+  const pageContentText = pageContext.textContent
+    ? `\nPage content snapshot:\n${pageContext.textContent}`
+    : "";
+
   return `You are a support agent embedded in a web application.
-The user is on page: ${pageContext.path} (${pageContext.title})
+The user is on page: ${pageContext.path} (${pageContext.title})${pageContentText}
 
 Captured browser logs:
 ${logsText}
@@ -71,11 +75,10 @@ agentRoutes.post("/chat", async (c) => {
     const body = await c.req.json();
     const { messages, logs, pageContext } = body;
 
-    const google = getGroq();
     const systemPrompt = buildSystemPrompt(pageContext, logs);
 
     const result = await generateText({
-    model: getGroq()("llama-3.1-8b-instant"),
+      model: getGroq()("llama-3.1-8b-instant"),
     system: systemPrompt,
     messages: messages.map((m: { role: string; content: string }) => ({
     role: m.role as "user" | "assistant",
