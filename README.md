@@ -1,105 +1,114 @@
-# jaicome-internship
+# AI Support Agent Widget
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Start, Hono, ORPC, and more.
+A floating customer support agent widget built as part of the Jaicome internship assessment. The agent reads browser console and network logs from the current page, chats with the user to understand their issue, and auto-drafts a support ticket using an LLM.
 
 ## Features
 
-- **TypeScript** - For type safety and improved developer experience
-- **TanStack Start** - SSR framework with TanStack Router
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **Shared UI package** - shadcn/ui primitives live in `packages/ui`
-- **Hono** - Lightweight, performant server framework
-- **oRPC** - End-to-end type-safe APIs with OpenAPI integration
-- **Bun** - Runtime environment
-- **Drizzle** - TypeScript-first ORM
-- **SQLite/Turso** - Database engine
-- **Authentication** - Better-Auth
-- **Turborepo** - Optimized monorepo build system
+- Floating support button embedded in the app
+- Silently captures `console.error`, `console.warn`, and failed network requests (4xx/5xx)
+- Page context captured via `@mozilla/readability` — sent to the AI on every turn
+- Multi-turn AI conversation supporting bug reports and feature requests
+- Auto-detects severity from log types (error/5xx = high, warn/4xx = medium)
+- Refuses to create a ticket from a vague one-line message
+- User reviews and edits all ticket fields before submitting
+- Tickets and full conversation history saved to SQLite via Drizzle ORM
 
-## Getting Started
+## Tech Stack
 
-First, install the dependencies:
+- **Frontend**: TanStack Start, React, shadcn/ui, Tailwind CSS
+- **Backend**: Hono, oRPC (typed end-to-end)
+- **Database**: SQLite via Drizzle ORM
+- **AI**: Vercel AI SDK + Groq (`llama-3.1-8b-instant`)
+- **Log Capture**: `@mswjs/interceptors` (network), `loglevel` (console)
+- **Page Context**: `@mozilla/readability`
+- **Auth**: Better Auth
+- **Monorepo**: Turborepo + Bun
+
+## Setup
+
+### Prerequisites
+
+- [Bun](https://bun.sh) installed
+- Groq API key — free at [console.groq.com](https://console.groq.com)
+
+### Install
 
 ```bash
 bun install
 ```
 
-## Database Setup
+### Environment Variables
 
-This project uses SQLite with Drizzle ORM.
+Create `apps/server/.env`:
 
-1. Start the local SQLite database (optional):
-
-```bash
-bun run db:local
+```env
+DATABASE_URL=file:../../packages/db/sqlite.db
+BETTER_AUTH_SECRET=your-secret-minimum-32-characters
+BETTER_AUTH_URL=http://localhost:3000
+CORS_ORIGIN=http://localhost:3001
+NODE_ENV=development
+GROQ_API_KEY=your-groq-api-key
 ```
 
-2. Update your `.env` file in the `apps/server` directory with the appropriate connection details if needed.
+Create `apps/web/.env`:
 
-3. Apply the schema to your database:
+```env
+VITE_SERVER_URL=http://localhost:3000
+```
+
+### Database
 
 ```bash
 bun run db:push
 ```
 
-Then, run the development server:
+### Run
 
 ```bash
 bun run dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the web application.
-The API is running at [http://localhost:3000](http://localhost:3000).
+- Web app: [http://localhost:3001](http://localhost:3001)
+- API server: [http://localhost:3000](http://localhost:3000)
 
-## UI Customization
+## How It Works
 
-React web apps in this stack share shadcn/ui primitives through `packages/ui`.
+1. Open the app — the logger silently captures all `console.error`/`console.warn` calls and failed fetch requests in the background
+2. Click the **?** button (bottom-right corner) to open the support widget
+3. Tell the agent your issue — it asks clarifying questions before drafting anything
+4. The agent combines your conversation + captured logs + page context to draft a structured ticket
+5. Review and edit the ticket fields (title, description, severity, repro steps)
+6. Submit — the ticket and full conversation are saved to SQLite
 
-- Change design tokens and global styles in `packages/ui/src/styles/globals.css`
-- Update shared primitives in `packages/ui/src/components/*`
-- Adjust shadcn aliases or style config in `packages/ui/components.json` and `apps/web/components.json`
+## Dummy App
 
-### Add more shared components
+The main dashboard intentionally produces real browser errors for the agent to read:
 
-Run this from the project root to add more primitives to the shared UI package:
+- **Process Payments** — triggers `console.error` (payment gateway timeout)
+- **Generate Report** — triggers a failed network request (404)
+- **Sync Now** — triggers another failed network request (404)
+- **Page load** — triggers `console.warn` (missing `API_KEY` config value)
 
-```bash
-npx shadcn@latest add accordion dialog popover sheet table -c packages/ui
-```
+All errors are user-triggered, not thrown automatically on page load.
 
-Import shared components like this:
+## Screenshots
 
-```tsx
-import { Button } from "@jaicome-internship/ui/components/button";
-```
+### Chat Flow
+![Chat](screenshots/chat.png)
 
-### Add app-specific blocks
-
-If you want to add app-specific blocks instead of shared primitives, run the shadcn CLI from `apps/web`.
+### Ticket Review
+![Review](screenshots/review.png)
 
 ## Project Structure
 
 ```
 jaicome-internship/
 ├── apps/
-│   ├── web/         # Frontend application (React + TanStack Start)
-│   └── server/      # Backend API (Hono, ORPC)
+│   ├── web/         # Frontend (React + TanStack Start)
+│   └── server/      # Backend API (Hono + oRPC + agent)
 ├── packages/
-│   ├── ui/          # Shared shadcn/ui components and styles
-│   ├── api/         # API layer / business logic
-│   ├── auth/        # Authentication configuration & logic
-│   └── db/          # Database schema & queries
+│   ├── ui/          # Shared shadcn/ui components
+│   ├── api/         # oRPC routers and procedures
+│   ├── auth/        # Better Auth configuration
+│   └── db/          # Drizzle schema and migrations
 ```
-
-## Available Scripts
-
-- `bun run dev`: Start all applications in development mode
-- `bun run build`: Build all applications
-- `bun run dev:web`: Start only the web application
-- `bun run dev:server`: Start only the server
-- `bun run check-types`: Check TypeScript types across all apps
-- `bun run db:push`: Push schema changes to database
-- `bun run db:generate`: Generate database client/types
-- `bun run db:migrate`: Run database migrations
-- `bun run db:studio`: Open database studio UI
-- `bun run db:local`: Start the local SQLite database
